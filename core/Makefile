@@ -1502,7 +1502,13 @@ INTERNAL_SYSTEMIMAGE_FILES := $(filter $(TARGET_OUT)/%, \
     $(RECOVERY_RESOURCE_ZIP)) \
     $(PDK_FUSION_SYMLINK_STAMP)
 
-FULL_SYSTEMIMAGE_DEPS := $(INTERNAL_SYSTEMIMAGE_FILES) $(INTERNAL_USERIMAGES_DEPS)
+systemimage-changelog: $(INTERNAL_SYSTEMIMAGE_FILES)
+	@echo -e "Making changelog!"
+	$(hide) APKCERTS=$(APKCERTS_FILE) ./vendor/dark/tools/changelog
+
+.PHONY: systemimage-changelog
+
+FULL_SYSTEMIMAGE_DEPS := $(INTERNAL_SYSTEMIMAGE_FILES) $(INTERNAL_USERIMAGES_DEPS) systemimage-changelog
 
 # ASAN libraries in the system image - add dependency.
 ASAN_IN_SYSTEM_INSTALLED := $(TARGET_OUT)/asan.tar.bz2
